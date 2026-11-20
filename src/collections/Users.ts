@@ -4,7 +4,8 @@ import { hasAdminRole, hasEditorialRole, isAdmin, isAdminField, isAdminOrSelf } 
 
 const publicOrigin =
   process.env.NEXT_PUBLIC_SERVER_URL?.trim() || process.env.APP_URL?.trim() || ''
-const useSecureCookies = publicOrigin.startsWith('https://')
+const useSecureCookies =
+  publicOrigin.startsWith('https://') || process.env.VERCEL === '1'
 
 export const Users: CollectionConfig = {
   slug: 'users',

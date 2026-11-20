@@ -236,7 +236,12 @@ export async function POST(req: NextRequest) {
           customerConfirmed: emailResult.customerConfirmed,
         },
       },
-      { status: 201 }
+      {
+        status: 201,
+        headers: {
+          'Cache-Control': 'no-store',
+        },
+      }
     )
   } catch (error) {
     console.error('[POST /api/contact] Failed to persist enquiry:', sanitizeMongoErrorMessage(error))
@@ -245,7 +250,7 @@ export async function POST(req: NextRequest) {
         ok: false,
         message: 'Unable to submit your enquiry right now. Please try again shortly.',
       },
-      { status: 500 }
+      { status: 500, headers: { 'Cache-Control': 'no-store' } }
     )
   }
 }
@@ -256,6 +261,6 @@ export async function GET() {
       ok: false,
       message: 'Method not allowed.',
     },
-    { status: 405, headers: { Allow: 'POST' } }
+    { status: 405, headers: { Allow: 'POST', 'Cache-Control': 'no-store' } }
   )
 }

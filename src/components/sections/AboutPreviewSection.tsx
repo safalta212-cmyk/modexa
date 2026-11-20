@@ -8,6 +8,7 @@ import { Container } from '@/components/ui/Container'
 import { ReplaceableMedia } from '@/components/ui/ReplaceableMedia'
 import type { MediaAssetSpec } from '@/data/types'
 import { DEFAULT_SITE_SETTINGS, type SiteSettingsViewModel } from '@/lib/cms'
+import { sanitizeSafeHref } from '@/lib/seo'
 
 const FALLBACK_ABOUT_ARTWORK: MediaAssetSpec = {
   id: 'about-studio-editorial',
@@ -64,7 +65,11 @@ export function AboutPreviewSection({
               </div>
             ) : null}
             <div className="pt-2">
-              <Button href={settings.introCtaHref} variant="secondary" size="md">
+              <Button
+                href={sanitizeSafeHref(settings.introCtaHref, '/about')}
+                variant="secondary"
+                size="md"
+              >
                 <span>{settings.introCtaLabel}</span>
                 <ArrowUpRight className="h-4 w-4 text-modx-accent-light" aria-hidden="true" />
               </Button>

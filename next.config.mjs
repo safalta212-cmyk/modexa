@@ -6,11 +6,23 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 function getServerRemotePatterns() {
-  const candidates = [process.env.NEXT_PUBLIC_SERVER_URL, process.env.APP_URL].filter(
-    (value) => Boolean(value && value !== 'MY_APP_URL')
-  )
+  const candidates = [
+    process.env.NEXT_PUBLIC_SERVER_URL,
+    process.env.APP_URL,
+    process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : undefined,
+    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
+  ].filter((value) => Boolean(value && value !== 'MY_APP_URL'))
 
-  const patterns = []
+  const patterns = [
+    {
+      protocol: 'https',
+      hostname: '**.public.blob.vercel-storage.com',
+      port: '',
+      pathname: '/**',
+    },
+  ]
 
   for (const candidate of candidates) {
     try {
@@ -42,6 +54,36 @@ const nextConfig = {
   },
   experimental: {
     webpackMemoryOptimizations: true,
+  },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          { key: 'X-DNS-Prefetch-Control', value: 'on' },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()',
+          },
+        ],
+      },
+      {
+        source: '/admin/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'no-store, no-cache, must-revalidate, private' },
+          { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
+        ],
+      },
+      {
+        source: '/api/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'no-store, no-cache, must-revalidate, private' },
+          { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
+        ],
+      },
+    ]
   },
   webpack: (config) => {
     config.resolve.alias = {

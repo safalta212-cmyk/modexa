@@ -29,8 +29,12 @@ export function sanitizeMongoErrorMessage(error: unknown): string {
 export function getCmsEnvironmentStatus(): CmsEnvironmentStatus {
   const mongoUri = process.env.MONGODB_URI?.trim() || ''
   const payloadSecret = process.env.PAYLOAD_SECRET?.trim() || ''
+  const vercelHost =
+    process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim() || process.env.VERCEL_URL?.trim() || ''
   const serverUrlRaw =
-    process.env.NEXT_PUBLIC_SERVER_URL?.trim() || process.env.APP_URL?.trim() || ''
+    process.env.NEXT_PUBLIC_SERVER_URL?.trim() ||
+    process.env.APP_URL?.trim() ||
+    (vercelHost ? `https://${vercelHost}` : '')
 
   const hasMongoUri = Boolean(mongoUri)
   const hasValidMongoScheme =

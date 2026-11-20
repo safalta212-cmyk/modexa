@@ -2,6 +2,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import { buildConfig } from 'payload'
 import sharp from 'sharp'
 
@@ -18,25 +19,53 @@ import { SiteSettings } from './globals/SiteSettings'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-function resolveServerURL(): string {
-  const candidate =
-    process.env.NEXT_PUBLIC_SERVER_URL?.trim() ||
-    process.env.APP_URL?.trim() ||
-    ''
-
+function normalizeOriginCandidate(raw?: string): string {
+  const candidate = raw?.trim() || ''
   if (!candidate || candidate === 'MY_APP_URL') {
     return ''
   }
 
-  return candidate.replace(/\/+$/, '')
+  const withProtocol =
+    candidate.startsWith('http://') || candidate.startsWith('https://')
+      ? candidate
+      : `https://${candidate}`
+
+  try {
+    return new URL(withProtocol).origin
+  } catch {
+    return ''
+  }
+}
+
+function resolveServerURL(): string {
+  const explicit =
+    normalizeOriginCandidate(process.env.NEXT_PUBLIC_SERVER_URL) ||
+    normalizeOriginCandidate(process.env.APP_URL)
+
+  if (explicit) {
+    return explicit
+  }
+
+  return (
+    normalizeOriginCandidate(process.env.VERCEL_PROJECT_PRODUCTION_URL) ||
+    normalizeOriginCandidate(process.env.VERCEL_URL)
+  )
 }
 
 function resolveAllowedOrigins(): string[] {
   const origins = new Set<string>()
-  const serverURL = resolveServerURL()
 
-  if (serverURL) {
-    origins.add(serverURL)
+  for (const candidate of [
+    process.env.NEXT_PUBLIC_SERVER_URL,
+    process.env.APP_URL,
+    process.env.VERCEL_PROJECT_PRODUCTION_URL,
+    process.env.VERCEL_URL,
+    process.env.VERCEL_BRANCH_URL,
+  ]) {
+    const normalized = normalizeOriginCandidate(candidate)
+    if (normalized) {
+      origins.add(normalized)
+    }
   }
 
   if (process.env.NODE_ENV !== 'production') {
@@ -49,6 +78,7 @@ function resolveAllowedOrigins(): string[] {
 
 const serverURL = resolveServerURL()
 const allowedOrigins = resolveAllowedOrigins()
+const blobToken = process.env.BLOB_READ_WRITE_TOKEN?.trim() || ''
 
 export default buildConfig({
   ...(serverURL ? { serverURL } : {}),
@@ -94,6 +124,9 @@ export default buildConfig({
   ],
   globals: [SiteSettings],
   editor: lexicalEditor(),
+  graphQL: {
+    disablePlaygroundInProduction: true,
+  },
   secret: process.env.PAYLOAD_SECRET?.trim() ?? '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
@@ -103,6 +136,18 @@ export default buildConfig({
       fileSize: 25 * 1024 * 1024, // 25 MB max upload size
     },
   },
+  plugins: [
+    vercelBlobStorage({
+      enabled: Boolean(blobToken),
+      alwaysInsertFields: true,
+      addRandomSuffix: true,
+      clientUploads: true,
+      collections: {
+        media: true,
+      },
+      token: blobToken,
+    }),
+  ],
   db: mongooseAdapter({
     url: process.env.MONGODB_URI?.trim() || '',
     connectOptions: {

@@ -304,7 +304,7 @@ export function ContactForm({
             onChange={(e) => handleFieldChange('fullName', e.target.value)}
             aria-invalid={Boolean(errors.fullName)}
             aria-describedby={errors.fullName ? 'contact-name-error' : undefined}
-            className={`w-full rounded-lg border bg-modx-bg px-4 py-3 text-sm text-white placeholder:text-modx-muted/60 focus:outline-none transition-colors disabled:opacity-60 ${
+            className={`w-full rounded-lg border bg-modx-bg px-4 py-3 text-sm text-white placeholder:text-modx-muted/60 focus:outline-none focus-visible:outline-2 focus-visible:outline-modx-accent-light transition-colors disabled:opacity-60 ${
               errors.fullName
                 ? 'border-rose-400 focus:border-rose-400'
                 : 'border-white/15 focus:border-modx-accent'
@@ -332,7 +332,7 @@ export function ContactForm({
             onChange={(e) => handleFieldChange('email', e.target.value)}
             aria-invalid={Boolean(errors.email)}
             aria-describedby={errors.email ? 'contact-email-error' : undefined}
-            className={`w-full rounded-lg border bg-modx-bg px-4 py-3 text-sm text-white placeholder:text-modx-muted/60 focus:outline-none transition-colors disabled:opacity-60 ${
+            className={`w-full rounded-lg border bg-modx-bg px-4 py-3 text-sm text-white placeholder:text-modx-muted/60 focus:outline-none focus-visible:outline-2 focus-visible:outline-modx-accent-light transition-colors disabled:opacity-60 ${
               errors.email
                 ? 'border-rose-400 focus:border-rose-400'
                 : 'border-white/15 focus:border-modx-accent'
@@ -362,7 +362,7 @@ export function ContactForm({
             onChange={(e) => handleFieldChange('phone', e.target.value)}
             aria-invalid={Boolean(errors.phone)}
             aria-describedby={errors.phone ? 'contact-phone-error' : undefined}
-            className={`w-full rounded-lg border bg-modx-bg px-4 py-3 text-sm text-white placeholder:text-modx-muted/60 focus:outline-none transition-colors disabled:opacity-60 ${
+            className={`w-full rounded-lg border bg-modx-bg px-4 py-3 text-sm text-white placeholder:text-modx-muted/60 focus:outline-none focus-visible:outline-2 focus-visible:outline-modx-accent-light transition-colors disabled:opacity-60 ${
               errors.phone
                 ? 'border-rose-400 focus:border-rose-400'
                 : 'border-white/15 focus:border-modx-accent'
@@ -390,7 +390,7 @@ export function ContactForm({
             onChange={(e) => handleFieldChange('company', e.target.value)}
             aria-invalid={Boolean(errors.company)}
             aria-describedby={errors.company ? 'contact-company-error' : undefined}
-            className={`w-full rounded-lg border bg-modx-bg px-4 py-3 text-sm text-white placeholder:text-modx-muted/60 focus:outline-none transition-colors disabled:opacity-60 ${
+            className={`w-full rounded-lg border bg-modx-bg px-4 py-3 text-sm text-white placeholder:text-modx-muted/60 focus:outline-none focus-visible:outline-2 focus-visible:outline-modx-accent-light transition-colors disabled:opacity-60 ${
               errors.company
                 ? 'border-rose-400 focus:border-rose-400'
                 : 'border-white/15 focus:border-modx-accent'
@@ -417,7 +417,7 @@ export function ContactForm({
             onChange={(e) => handleFieldChange('requestedService', e.target.value)}
             aria-invalid={Boolean(errors.requestedService)}
             aria-describedby={errors.requestedService ? 'contact-service-error' : undefined}
-            className={`w-full rounded-lg border bg-modx-bg px-4 py-3 text-sm text-white focus:outline-none transition-colors disabled:opacity-60 ${
+            className={`w-full rounded-lg border bg-modx-bg px-4 py-3 text-sm text-white focus:outline-none focus-visible:outline-2 focus-visible:outline-modx-accent-light transition-colors disabled:opacity-60 ${
               errors.requestedService
                 ? 'border-rose-400 focus:border-rose-400'
                 : 'border-white/15 focus:border-modx-accent'
@@ -449,7 +449,7 @@ export function ContactForm({
             onChange={(e) => handleFieldChange('budget', e.target.value)}
             aria-invalid={Boolean(errors.budget)}
             aria-describedby={errors.budget ? 'contact-budget-error' : undefined}
-            className={`w-full rounded-lg border bg-modx-bg px-4 py-3 text-sm text-white focus:outline-none transition-colors disabled:opacity-60 ${
+            className={`w-full rounded-lg border bg-modx-bg px-4 py-3 text-sm text-white focus:outline-none focus-visible:outline-2 focus-visible:outline-modx-accent-light transition-colors disabled:opacity-60 ${
               errors.budget
                 ? 'border-rose-400 focus:border-rose-400'
                 : 'border-white/15 focus:border-modx-accent'
@@ -484,7 +484,7 @@ export function ContactForm({
           onChange={(e) => handleFieldChange('message', e.target.value)}
           aria-invalid={Boolean(errors.message)}
           aria-describedby={errors.message ? 'contact-message-error' : undefined}
-          className={`w-full rounded-lg border bg-modx-bg px-4 py-3 text-sm text-white placeholder:text-modx-muted/60 focus:outline-none transition-colors disabled:opacity-60 ${
+          className={`w-full rounded-lg border bg-modx-bg px-4 py-3 text-sm text-white placeholder:text-modx-muted/60 focus:outline-none focus-visible:outline-2 focus-visible:outline-modx-accent-light transition-colors disabled:opacity-60 ${
             errors.message
               ? 'border-rose-400 focus:border-rose-400'
               : 'border-white/15 focus:border-modx-accent'

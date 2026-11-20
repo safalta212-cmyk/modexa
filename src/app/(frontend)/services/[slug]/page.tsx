@@ -35,6 +35,15 @@ export async function generateMetadata({
   const res = await getPublishedServiceBySlug(slug)
   const service = res.data.service
 
+  if (res.status !== 'ok') {
+    return buildPageMetadata({
+      title: 'Service Unavailable',
+      description: 'Unable to load service details from Payload CMS right now.',
+      path: `/services/${slug}`,
+      noIndex: true,
+    })
+  }
+
   if (!service) {
     return buildPageMetadata({
       title: 'Service Not Found',

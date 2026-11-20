@@ -12,7 +12,12 @@ import {
   projectSlugTag,
   serviceSlugTag,
 } from '@/lib/revalidate'
-import { isVideoMedia, resolveMediaObject, resolveMediaUrl } from '@/lib/seo'
+import {
+  isVideoMedia,
+  resolveMediaObject,
+  resolveMediaUrl,
+  sanitizeSafeHref,
+} from '@/lib/seo'
 import type {
   BlogPost,
   Category,
@@ -493,12 +498,15 @@ function mapSiteSettings(doc: Partial<SiteSetting> | null | undefined): SiteSett
     ),
     heroDescription: pick(doc.heroDescription, DEFAULT_SITE_SETTINGS.heroDescription),
     heroPrimaryCtaLabel: pick(doc.heroPrimaryCtaLabel, DEFAULT_SITE_SETTINGS.heroPrimaryCtaLabel),
-    heroPrimaryCtaHref: pick(doc.heroPrimaryCtaHref, DEFAULT_SITE_SETTINGS.heroPrimaryCtaHref),
+    heroPrimaryCtaHref: sanitizeSafeHref(
+      doc.heroPrimaryCtaHref,
+      DEFAULT_SITE_SETTINGS.heroPrimaryCtaHref
+    ),
     heroSecondaryCtaLabel: pick(
       doc.heroSecondaryCtaLabel,
       DEFAULT_SITE_SETTINGS.heroSecondaryCtaLabel
     ),
-    heroSecondaryCtaHref: pick(
+    heroSecondaryCtaHref: sanitizeSafeHref(
       doc.heroSecondaryCtaHref,
       DEFAULT_SITE_SETTINGS.heroSecondaryCtaHref
     ),
@@ -515,7 +523,7 @@ function mapSiteSettings(doc: Partial<SiteSetting> | null | undefined): SiteSett
           }))
         : DEFAULT_SITE_SETTINGS.introHighlights,
     introCtaLabel: pick(doc.introCtaLabel, DEFAULT_SITE_SETTINGS.introCtaLabel),
-    introCtaHref: pick(doc.introCtaHref, DEFAULT_SITE_SETTINGS.introCtaHref),
+    introCtaHref: sanitizeSafeHref(doc.introCtaHref, DEFAULT_SITE_SETTINGS.introCtaHref),
     aboutEyebrow: pick(doc.aboutEyebrow, DEFAULT_SITE_SETTINGS.aboutEyebrow),
     aboutHeadline: pick(doc.aboutHeadline, DEFAULT_SITE_SETTINGS.aboutHeadline),
     aboutSummary: pick(doc.aboutSummary, DEFAULT_SITE_SETTINGS.aboutSummary),
@@ -547,9 +555,12 @@ function mapSiteSettings(doc: Partial<SiteSetting> | null | undefined): SiteSett
     ctaHeadline: pick(doc.ctaHeadline, DEFAULT_SITE_SETTINGS.ctaHeadline),
     ctaDescription: pick(doc.ctaDescription, DEFAULT_SITE_SETTINGS.ctaDescription),
     ctaPrimaryLabel: pick(doc.ctaPrimaryLabel, DEFAULT_SITE_SETTINGS.ctaPrimaryLabel),
-    ctaPrimaryHref: pick(doc.ctaPrimaryHref, DEFAULT_SITE_SETTINGS.ctaPrimaryHref),
+    ctaPrimaryHref: sanitizeSafeHref(doc.ctaPrimaryHref, DEFAULT_SITE_SETTINGS.ctaPrimaryHref),
     ctaSecondaryLabel: pick(doc.ctaSecondaryLabel, DEFAULT_SITE_SETTINGS.ctaSecondaryLabel),
-    ctaSecondaryHref: pick(doc.ctaSecondaryHref, DEFAULT_SITE_SETTINGS.ctaSecondaryHref),
+    ctaSecondaryHref: sanitizeSafeHref(
+      doc.ctaSecondaryHref,
+      DEFAULT_SITE_SETTINGS.ctaSecondaryHref
+    ),
     resultsMetrics: (doc.resultsMetrics ?? []).map((m) => ({
       value: m.value,
       label: m.label,

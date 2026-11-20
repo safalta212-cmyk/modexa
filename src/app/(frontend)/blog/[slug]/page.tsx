@@ -42,6 +42,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const res = await getPublishedBlogPostBySlug(slug)
   const post = res.data.post
 
+  if (res.status !== 'ok') {
+    return buildPageMetadata({
+      title: 'Article Unavailable',
+      description: 'Unable to load this blog post from Payload CMS right now.',
+      path: `/blog/${slug}`,
+      noIndex: true,
+    })
+  }
+
   if (!post) {
     return buildPageMetadata({
       title: 'Article Not Found',

@@ -5,6 +5,7 @@ import { FadeIn } from '@/components/motion/FadeIn'
 import { Button } from '@/components/ui/Button'
 import { Container } from '@/components/ui/Container'
 import { DEFAULT_SITE_SETTINGS, type SiteSettingsViewModel } from '@/lib/cms'
+import { sanitizeSafeHref } from '@/lib/seo'
 
 export function CtaBannerSection({
   settings = DEFAULT_SITE_SETTINGS,
@@ -30,11 +31,19 @@ export function CtaBannerSection({
               {settings.ctaDescription}
             </p>
             <div className="pt-2 flex flex-wrap items-center justify-center gap-4">
-              <Button href={settings.ctaPrimaryHref} variant="primary" size="lg">
+              <Button
+                href={sanitizeSafeHref(settings.ctaPrimaryHref, '/contact')}
+                variant="primary"
+                size="lg"
+              >
                 <span>{settings.ctaPrimaryLabel}</span>
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Button>
-              <Button href={settings.ctaSecondaryHref} variant="outline" size="lg">
+              <Button
+                href={sanitizeSafeHref(settings.ctaSecondaryHref, '/services')}
+                variant="outline"
+                size="lg"
+              >
                 {settings.ctaSecondaryLabel}
               </Button>
             </div>

@@ -147,6 +147,22 @@ export function EnquiryManagerClient({
     void fetchEnquiries(page, statusFilter, debouncedSearch)
   }, [page, statusFilter, debouncedSearch, fetchEnquiries, hasInitialized])
 
+  useEffect(() => {
+    if (!deleteTarget && !selectedEnquiry) return
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return
+      if (deleteTarget && !deleting) {
+        setDeleteTarget(null)
+        return
+      }
+      if (selectedEnquiry && !saving) {
+        setSelectedEnquiry(null)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [deleteTarget, deleting, selectedEnquiry, saving])
+
   const openInspector = (item: ContactEnquiry) => {
     setSelectedEnquiry(item)
     setEditStatus(item.enquiryStatus)

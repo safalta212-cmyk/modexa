@@ -8,6 +8,7 @@ import { Container } from '@/components/ui/Container'
 import { ReplaceableMedia } from '@/components/ui/ReplaceableMedia'
 import type { MediaAssetSpec } from '@/data/types'
 import { DEFAULT_SITE_SETTINGS, type SiteSettingsViewModel } from '@/lib/cms'
+import { sanitizeSafeHref } from '@/lib/seo'
 
 const FALLBACK_HERO_ARTWORK: MediaAssetSpec = {
   id: 'hero-3d-sculpture',
@@ -48,11 +49,19 @@ export function HeroSection({
             </p>
 
             <div className="flex flex-wrap items-center gap-4 pt-2">
-              <Button href={settings.heroPrimaryCtaHref} variant="primary" size="lg">
+              <Button
+                href={sanitizeSafeHref(settings.heroPrimaryCtaHref, '/contact')}
+                variant="primary"
+                size="lg"
+              >
                 <span>{settings.heroPrimaryCtaLabel}</span>
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Button>
-              <Button href={settings.heroSecondaryCtaHref} variant="outline" size="lg">
+              <Button
+                href={sanitizeSafeHref(settings.heroSecondaryCtaHref, '/portfolio')}
+                variant="outline"
+                size="lg"
+              >
                 <Compass className="h-4 w-4 text-modx-accent-light" aria-hidden="true" />
                 <span>{settings.heroSecondaryCtaLabel}</span>
               </Button>

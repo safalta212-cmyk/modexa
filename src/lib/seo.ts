@@ -5,21 +5,29 @@ import type { Media } from '@/payload-types'
 const SITE_NAME = 'Modexa Digital'
 
 export function getSiteBaseUrl(): string {
-  const raw =
-    process.env.NEXT_PUBLIC_SERVER_URL?.trim() ||
-    process.env.APP_URL?.trim() ||
-    'http://localhost:3000'
+  const candidates = [
+    process.env.NEXT_PUBLIC_SERVER_URL,
+    process.env.APP_URL,
+    process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : undefined,
+    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
+  ]
 
-  if (!raw || raw === 'MY_APP_URL') {
-    return 'http://localhost:3000'
+  for (const candidate of candidates) {
+    const raw = candidate?.trim() || ''
+    if (!raw || raw === 'MY_APP_URL') continue
+    try {
+      const parsed = new URL(raw)
+      if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+        return parsed.origin
+      }
+    } catch {
+      // Ignore malformed candidate
+    }
   }
 
-  try {
-    const parsed = new URL(raw)
-    return parsed.origin
-  } catch {
-    return 'http://localhost:3000'
-  }
+  return 'http://localhost:3000'
 }
 
 export function resolveCanonicalUrl(pathname: string): string {
@@ -43,6 +51,38 @@ export function sanitizeExternalUrl(url: string | null | undefined): string | nu
     return null
   } catch {
     return null
+  }
+}
+
+export function sanitizeSafeHref(
+  href: string | null | undefined,
+  fallback = '/'
+): string {
+  if (!href || typeof href !== 'string') return fallback
+  const trimmed = href.trim()
+  if (!trimmed) return fallback
+
+  if (trimmed.startsWith('/') && !trimmed.startsWith('//')) {
+    return trimmed
+  }
+
+  if (trimmed.startsWith('#') && !trimmed.includes('javascript:')) {
+    return trimmed
+  }
+
+  try {
+    const parsed = new URL(trimmed)
+    if (
+      parsed.protocol === 'http:' ||
+      parsed.protocol === 'https:' ||
+      parsed.protocol === 'mailto:' ||
+      parsed.protocol === 'tel:'
+    ) {
+      return parsed.toString()
+    }
+    return fallback
+  } catch {
+    return fallback
   }
 }
 

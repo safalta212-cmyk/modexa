@@ -35,7 +35,7 @@ export const ContactEnquiries: CollectionConfig = {
     hidden: ({ user }) => !hasAdminRole(user as { role?: string | null } | null),
   },
   access: {
-    create: () => true,
+    create: isAdmin,
     read: isAdmin,
     update: isAdmin,
     delete: isAdmin,
@@ -50,7 +50,10 @@ export const ContactEnquiries: CollectionConfig = {
 
           const sanitized: Record<string, unknown> = {
             ...data,
-            submissionDate: data?.submissionDate || new Date().toISOString(),
+            submissionDate:
+              isAuthorizedAdmin && data?.submissionDate
+                ? data.submissionDate
+                : new Date().toISOString(),
           }
 
           if (!isAuthorizedAdmin) {

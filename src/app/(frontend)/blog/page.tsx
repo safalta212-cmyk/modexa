@@ -31,7 +31,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function BlogPage({ searchParams }: BlogPageProps) {
   const { category, page } = await searchParams
   const categorySlug = category?.trim() || 'all'
-  const currentPage = Math.max(1, Number(page) || 1)
+  const currentPage = Math.max(1, Math.floor(Number(page)) || 1)
 
   const [categoriesRes, blogRes, settingsRes] = await Promise.all([
     getPublishedCategories('blog'),

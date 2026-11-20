@@ -46,6 +46,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const res = await getPublishedProjectBySlug(slug)
   const project = res.data.project
 
+  if (res.status !== 'ok') {
+    return buildPageMetadata({
+      title: 'Project Unavailable',
+      description: 'Unable to load project details from Payload CMS right now.',
+      path: `/portfolio/${slug}`,
+      noIndex: true,
+    })
+  }
+
   if (!project) {
     return buildPageMetadata({
       title: 'Project Not Found',
